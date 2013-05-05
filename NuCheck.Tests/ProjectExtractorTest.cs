@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -74,43 +72,6 @@ namespace NuCheck.Tests
             {
                 Assert.AreEqual("Project3.csproj", result.ElementAt(2).FileName);
             }
-        }
-    }
-
-    public class Project
-    {
-        private readonly string name;
-        private readonly string fileName;
-
-        public Project(string name, string fileName)
-        {
-            this.name = name;
-            this.fileName = fileName;
-        }
-
-        public string Name { get { return name; } }
-
-        public string FileName { get { return fileName; } }
-    }
-
-    public class ProjectExtractor
-    {        
-        private readonly string solutionFile;
-
-        public ProjectExtractor(string solutionFile)
-        {
-            this.solutionFile = solutionFile;
-        }
-
-        public IEnumerable<Project> ExtractAll()
-        {
-            string content = File.ReadAllText(solutionFile);
-            string pattern = @"=\s*""(?<ProjectName>.+?)""\s*,\s*""(?<ProjectFile>.+?)""\s*,\s*""(?<ProjectGUID>.+?)""";
-
-            var matches = Regex.Matches(content, pattern);
-
-            return from Match match in matches 
-                   select new Project(match.Groups["ProjectName"].Value, match.Groups["ProjectFile"].Value);
         }
     }
 }
