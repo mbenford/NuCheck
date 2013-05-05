@@ -17,7 +17,7 @@ namespace NuCheck.Tests
             public void TestFixtureSetUp()
             {
                 // Arrange
-                string solutionFile = "Sample.sln";
+                string solutionFile = "TestData\\solution.sln";
 
                 var sut = new ProjectExtractor(solutionFile);
 
