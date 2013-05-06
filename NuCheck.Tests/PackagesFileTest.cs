@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
 
 namespace NuCheck.Tests
 {
@@ -6,58 +8,60 @@ namespace NuCheck.Tests
     {
         public class Loads_A_Package_File_From_Disk
         {
-            private PackagesFile sut;
+            private IEnumerable<Package> result;
 
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
                 // Arrange
                 string projectFile = "TestData\\Project.csproj";
+
+                var sut = new PackagesFileLoader();
                 
                 // Act
-                sut = new PackagesFile(projectFile);
+                result = sut.Load(projectFile);
             }
 
             [Test]
             public void Packages_Count_Should_Be_3()
             {
-                Assert.AreEqual(3, sut.Packages.Count);
+                Assert.AreEqual(3, result.Count());
             }
 
             [Test]
             public void First_Package_Id_Should_Be_Package1()
             {
-                Assert.AreEqual("Package1", sut.Packages[0].Id);
+                Assert.AreEqual("Package1", result.ElementAt(0).Id);
             }
 
             [Test]
             public void Second_Package_Id_Should_Be_Package2()
             {
-                Assert.AreEqual("Package2", sut.Packages[1].Id);
+                Assert.AreEqual("Package2", result.ElementAt(1).Id);
             }
 
             [Test]
             public void Third_Package_Id_Should_Be_Package3()
             {
-                Assert.AreEqual("Package3", sut.Packages[2].Id);
+                Assert.AreEqual("Package3", result.ElementAt(2).Id);
             }
 
             [Test]
             public void First_Package_Version_Should_Be_1_0_0()
             {
-                Assert.AreEqual("1.0.0", sut.Packages[0].Version);
+                Assert.AreEqual("1.0.0", result.ElementAt(0).Version);
             }
 
             [Test]
             public void Second_Package_Version_Should_Be_1_1_0()
             {
-                Assert.AreEqual("1.1.0", sut.Packages[1].Version);
+                Assert.AreEqual("1.1.0", result.ElementAt(1).Version);
             }
 
             [Test]
             public void Third_Package_Version_Should_Be_2_0_0()
             {
-                Assert.AreEqual("2.0.0", sut.Packages[2].Version);
+                Assert.AreEqual("2.0.0", result.ElementAt(2).Version);
             }
 
         }

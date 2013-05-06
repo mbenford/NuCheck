@@ -19,10 +19,10 @@ namespace NuCheck.Tests
                 // Arrange
                 string solutionFile = "TestData\\solution.sln";
 
-                var sut = new ProjectExtractor(solutionFile);
+                var sut = new ProjectExtractor();
 
                 // Act
-                result = sut.ExtractAll();
+                result = sut.ExtractAll(solutionFile);
             }
 
             [Test]

@@ -41,8 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPackagesFileLoader.cs" />
+    <Compile Include="IProjectExtractor.cs" />
     <Compile Include="Package.cs" />
-    <Compile Include="PackagesFile.cs" />
+    <Compile Include="PackagesAggregator.cs" />
+    <Compile Include="PackagesFileLoader.cs" />
+    <Compile Include="PackageVersion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectExtractor.cs" />

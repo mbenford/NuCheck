@@ -5,16 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace NuCheck
 {
-    public class ProjectExtractor
+    public class ProjectExtractor : IProjectExtractor
     {        
-        private readonly string solutionFile;
-
-        public ProjectExtractor(string solutionFile)
-        {
-            this.solutionFile = solutionFile;
-        }
-
-        public IEnumerable<Project> ExtractAll()
+        public IEnumerable<Project> ExtractAll(string solutionFile)
         {
             string content = File.ReadAllText(solutionFile);
             string pattern = @"=\s*""(?<ProjectName>.+?)""\s*,\s*""(?<ProjectFile>.+?)""\s*,\s*""(?<ProjectGUID>.+?)""";
