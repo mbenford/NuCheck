@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace NuCheck
 {
@@ -15,16 +16,26 @@ namespace NuCheck
 
         public IDictionary<Package, IEnumerable<Project>> Aggregate(string solutionFile)
         {
-            var a = new Dictionary<Package, IEnumerable<Project>>();
-            a.Add(new Package("P1", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj") });
-            a.Add(new Package("P2", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj") });
-            a.Add(new Package("P2", "1.1.0"), new[] { new Project("PROJ2", "project2.csproj") });
+            string basePath = Path.GetDirectoryName(solutionFile);
 
-            projectExtractor.ExtractAll(solutionFile);
-            packagesFileLoader.Load("project1.csproj");
-            packagesFileLoader.Load("project2.csproj");            
+            var aggregation = new Dictionary<Package, IEnumerable<Project>>();
 
-            return a;            
+            foreach (Project project in projectExtractor.ExtractAll(solutionFile))
+            {
+                foreach (Package package in packagesFileLoader.Load(Path.Combine(basePath, project.FileName)))
+                {
+                    if (aggregation.ContainsKey(package))
+                    {
+                        (aggregation[package] as IList<Project>).Add(project);
+                    }
+                    else
+                    {
+                        aggregation.Add(package, new List<Project> { project });
+                    }
+                }
+            }
+                     
+            return aggregation;
         }
     }
 }
