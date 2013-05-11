@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PackagesFileTest.cs" />
+    <Compile Include="PackagesFileLoaderTest.cs" />
     <Compile Include="PackagesAggregatorTest.cs" />
     <Compile Include="ProjectExtractorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace NuCheck.Tests
 {
-    public class PackagesFileTest
+    public class PackagesFileLoaderTest
     {
         public class Loads_A_Package_File_From_Disk
         {
