@@ -13,15 +13,18 @@ namespace NuCheck
             this.packagesFileLoader = packagesFileLoader;
         }
 
-        public IDictionary<string, IEnumerable<PackageVersion>> Aggregate(string solutionFile)
+        public IDictionary<Package, IEnumerable<Project>> Aggregate(string solutionFile)
         {
-            var a = new Dictionary<string, IEnumerable<PackageVersion>>();
-            a.Add("P1", new[] { new PackageVersion("1.0.0", new[] { new Project("PROJ1", ""), new Project("PROJ2","")}) });
-            a.Add("P2", new[] { new PackageVersion("1.0.0", new[] { new Project("PROJ1",""), }), new PackageVersion("1.1.0", new[] { new Project("PROJ2",""), }), });
+            var a = new Dictionary<Package, IEnumerable<Project>>();
+            a.Add(new Package("P1", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj") });
+            a.Add(new Package("P2", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj") });
+            a.Add(new Package("P2", "1.1.0"), new[] { new Project("PROJ2", "project2.csproj") });
+
             projectExtractor.ExtractAll(solutionFile);
-            packagesFileLoader.Load("");
-            packagesFileLoader.Load("");
-            return a;
+            packagesFileLoader.Load("project1.csproj");
+            packagesFileLoader.Load("project2.csproj");            
+
+            return a;            
         }
-    }    
+    }
 }

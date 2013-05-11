@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace NuCheck.Tests
             private Mock<IProjectExtractor> projectExtractorMock;
             private Mock<IPackagesFileLoader> packagesFileLoaderMock;
             
-            private IDictionary<string, IEnumerable<PackageVersion>> result;
+            private IDictionary<Package, IEnumerable<Project>> result;
 
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
@@ -52,93 +53,29 @@ namespace NuCheck.Tests
             }
 
             [Test]
-            public void Result_Count_Should_Be_2()
-            {                
-                Assert.AreEqual(2, result.Count);
+            public void Result_Keys_Should_Match_Expected_Keys()
+            {
+                var expectedKeys = new[]
+                    {
+                        new Package("P1", "1.0.0"),
+                        new Package("P2", "1.0.0"),
+                        new Package("P2", "1.1.0"),
+                    };
+
+                result.Keys.ShouldBeEquivalentTo(expectedKeys);
             }
 
             [Test]
-            public void First_Key_Should_Be_P1()
+            public void Result_Values_Should_Match_Expected_Values()
             {
-                Assert.AreEqual("P1", result.Keys.ElementAt(0));
-            }
+                var expectedValues = new[]
+                    {
+                        new[] { new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj") },
+                        new[] { new Project("PROJ1", "project1.csproj") },
+                        new[] { new Project("PROJ2", "project2.csproj") },
+                    };
 
-            [Test]
-            public void Second_Key_Should_Be_P2()
-            {
-                Assert.AreEqual("P2", result.Keys.ElementAt(1));
-            }
-
-            [Test]
-            public void Package_P1_Should_Have_One_Version_In_Use()
-            {
-                Assert.AreEqual(1, result["P1"].Count());
-            }
-
-            [Test]
-            public void Package_P1_Version_Should_Be_1_0_0()
-            {
-                Assert.AreEqual("1.0.0", result["P1"].First().Version);
-            }
-
-            [Test]
-            public void Package_P1_Should_Be_Used_In_Two_Projects()
-            {
-                Assert.AreEqual(2, result["P1"].ElementAt(0).Projects.Count());
-            }
-
-            [Test]
-            public void Package_P1_Should_Be_Used_In_Project_PROJ1()
-            {
-                Assert.True(result["P1"].First().Projects.Any(p => p.Name == "PROJ1"));
-            }
-
-            [Test]
-            public void Package_P1_Should_Be_Used_In_Project_PROJ2()
-            {
-                Assert.True(result["P1"].First().Projects.Any(p => p.Name == "PROJ2"));
-            }
-
-            [Test]
-            public void Package_P2_Should_Have_Two_Versions_In_Use()
-            {
-                Assert.AreEqual(2, result["P2"].Count());
-            }
-
-            [Test]
-            public void Package_P2_First_Version_Should_Be_1_0_0()
-            {
-                Assert.AreEqual("1.0.0", result["P2"].First().Version);
-            }
-
-            [Test]
-            public void Package_P2_Second_Version_Should_Be_1_1_0()
-            {
-                Assert.AreEqual("1.1.0", result["P2"].Last().Version);
-            }
-
-            [Test]
-            public void Package_P2_Version_1_0_0_Should_Be_Used_In_One_Project()
-            {
-                Assert.AreEqual(1, result["P2"].First().Projects.Count());
-            }
-
-            [Test]
-            public void Package_P2_Version_1_1_0_Should_Be_Used_In_One_Project()
-            {
-                Assert.AreEqual(1, result["P2"].Last().Projects.Count());
-            }
-
-            [Test]
-            public void Package_P2_Version_1_0_0_Should_Be_Used_In_Project_PROJ1()
-            {
-                Assert.True(result["P2"].First().Projects.Any(p => p.Name == "PROJ1"));
-            }
-
-            [Test]
-            public void Package_P2_Version_1_1_0_Should_Be_Used_In_Project_PROJ2()
-            {
-                Assert.True(result["P2"].Last().Projects.Any(p => p.Name == "PROJ2"));
+                result.Values.ShouldBeEquivalentTo(expectedValues);
             }
 
             [Test]
