@@ -15,6 +15,7 @@ namespace NuCheck
         public IEnumerable<Issue> GetIssues(string solutionFile)
         {
             IDictionary<Package, IEnumerable<Project>> packagesAggregation = packagesAggregator.Aggregate(solutionFile);
+
             var packageGroup = from package in packagesAggregation.Keys
                                group package by package.Id
                                into g
