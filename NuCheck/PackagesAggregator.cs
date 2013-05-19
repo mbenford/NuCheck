@@ -3,7 +3,7 @@ using System.IO;
 
 namespace NuCheck
 {
-    public class PackagesAggregator
+    public class PackagesAggregator : IPackagesAggregator
     {
         private readonly IProjectExtractor projectExtractor;
         private readonly IPackagesFileLoader packagesFileLoader;

@@ -52,6 +52,7 @@
     <Compile Include="PackagesAggregatorTest.cs" />
     <Compile Include="ProjectExtractorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionAnalyzerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

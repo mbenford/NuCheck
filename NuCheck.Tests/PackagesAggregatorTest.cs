@@ -12,7 +12,7 @@ namespace NuCheck.Tests
 {
     public class PackagesAggregatorTest
     {
-        public class Groups_All_Packages_Versions_In_Use_By_Package_Id
+        public class Groups_All_Projects_By_Package_Id_And_Version
         {
             private Mock<IProjectExtractor> projectExtractorMock;
             private Mock<IPackagesFileLoader> packagesFileLoaderMock;

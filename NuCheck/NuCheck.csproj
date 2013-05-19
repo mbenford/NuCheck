@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPackagesAggregator.cs" />
     <Compile Include="IPackagesFileLoader.cs" />
     <Compile Include="IProjectExtractor.cs" />
+    <Compile Include="Issue.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="PackagesAggregator.cs" />
     <Compile Include="PackagesFileLoader.cs" />
@@ -50,6 +52,7 @@
     <Compile Include="Project.cs" />
     <Compile Include="ProjectExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
