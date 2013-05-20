@@ -12,9 +12,20 @@ namespace NuCheck
         {
             string packageFile = Path.Combine(Path.GetDirectoryName(projectFile), "packages.config");
 
-            var xml = XElement.Load(packageFile);
-            return from p in xml.Elements()
-                   select new Package((string)p.Attribute("id"), (string)p.Attribute("version"));
+            IEnumerable<Package> packages;
+
+            if (File.Exists(packageFile))
+            {
+                packages = from p in XElement.Load(packageFile).Elements()
+                           select new Package((string)p.Attribute("id"), (string)p.Attribute("version"));
+
+            }
+            else
+            {
+                packages = Enumerable.Empty<Package>();
+            }
+
+            return packages;
         }
     }
 }
