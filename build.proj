@@ -1,0 +1,46 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Make">
+
+  <PropertyGroup>
+    <SourceDir>$(MSBuildProjectDirectory)</SourceDir>
+    <OutputDir>$(SourceDir)\Output</OutputDir>
+    <BuildProperties>Configuration=Release;Platform=Any CPU</BuildProperties>
+  </PropertyGroup>
+
+  <UsingTask
+		AssemblyFile="$(SourceDir)\.build\xunit.runner.msbuild.dll"
+		TaskName="Xunit.Runner.MSBuild.xunit" />
+
+  <ItemGroup>
+    <SolutionFile
+			Include="$(SourceDir)\NuCheck.sln" />
+  </ItemGroup>
+
+  <Target Name="Clean">
+    <MSBuild
+			Projects="@(SolutionFile)"
+			Targets="Clean"
+			Properties="$(BuildProperties)" />
+    <RemoveDir
+			Directories="$(OutputDir)"
+			ContinueOnError="True" />
+  </Target>
+
+  <Target Name="Build">
+    <MSBuild
+			Projects="@(SolutionFile)"
+			Properties="$(BuildProperties)" />
+  </Target>
+
+  <Target Name="Test" DependsOnTargets="Build">
+    <xunit 
+      Assembly="$(SourceDir)\NuCheck.Tests\bin\Release\NuCheck.Tests.dll" />
+  </Target>
+
+  <Target Name="Make">
+    <CallTarget
+			Targets="Clean;Build;Test" />
+    <Copy
+			SourceFiles="$(SourceDir)\NuCheck\bin\Release\NuCheck.exe"
+			DestinationFolder="$(OutputDir)" />
+  </Target> 
+</Project>
