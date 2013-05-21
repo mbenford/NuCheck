@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace NuCheck.Tests
 {
@@ -12,7 +8,7 @@ namespace NuCheck.Tests
     {
         public class Extracts_All_Projects_From_A_Solution_File
         {
-            [Test]
+            [Fact]
             public void Returns_All_Projects_Found_In_A_Solution_File()
             {
                 // Arrange

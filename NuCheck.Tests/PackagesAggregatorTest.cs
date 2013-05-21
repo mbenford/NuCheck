@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace NuCheck.Tests
 {
@@ -19,8 +15,7 @@ namespace NuCheck.Tests
             
             private IDictionary<Package, IEnumerable<Project>> result;
 
-            [TestFixtureSetUp]
-            public void TestFixtureSetUp()
+            public Groups_All_Projects_By_Package_Id_And_Version()
             {
                 // Arrange
                 string solutionFile = "C:\\solution.sln";
@@ -52,7 +47,7 @@ namespace NuCheck.Tests
                 result = sut.Aggregate(solutionFile);
             }
 
-            [Test]
+            [Fact]
             public void Result_Keys_Should_Match_Expected_Keys()
             {
                 var expectedKeys = new[]
@@ -65,7 +60,7 @@ namespace NuCheck.Tests
                 result.Keys.ShouldBeEquivalentTo(expectedKeys);
             }
 
-            [Test]
+            [Fact]
             public void Result_Values_Should_Match_Expected_Values()
             {
                 var expectedValues = new[]
@@ -78,13 +73,13 @@ namespace NuCheck.Tests
                 result.Values.ShouldBeEquivalentTo(expectedValues);
             }
 
-            [Test]
+            [Fact]
             public void IProjectExtractor_ExtractAll_Should_Be_Called_Once()
             {
                 projectExtractorMock.Verify(m => m.ExtractAll(It.IsAny<string>()), Times.Once());
             }
 
-            [Test]
+            [Fact]
             public void IPackagesFileLoader_Load_Should_Be_Called_Twice()
             {
                 packagesFileLoaderMock.Verify(m => m.Load(It.IsAny<string>()), Times.Exactly(2));

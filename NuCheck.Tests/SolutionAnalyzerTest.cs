@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace NuCheck.Tests
 {
@@ -13,7 +9,7 @@ namespace NuCheck.Tests
     {
         public class Scans_A_Solution_For_Packages_Issues
         {
-            [Test]
+            [Fact]
             public void Result_Should_Be_Empty_When_There_Is_Only_One_Version_Of_Each_Package_In_Use()
             {
                 // Arrange
@@ -37,7 +33,7 @@ namespace NuCheck.Tests
                 result.Should().BeEmpty();
             }
 
-            [Test]
+            [Fact]
             public void Result_Should_Contain_All_Packages_With_More_Than_One_Version_In_Use()
             {
                 // Arrange
