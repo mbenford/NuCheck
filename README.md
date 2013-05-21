@@ -8,8 +8,8 @@ To help catch that scenario earlier in the development process I created NuCheck
 
 Building NuCheck from the source code is just a three-step process:
 
-```git clone https://github.com/mbenford/nucheck.git
-cd NuCheck
-build.cmd
-```
+	git clone https://github.com/mbenford/nucheck.git
+	cd NuCheck
+	build.cmd
+
 When the build script finishes running, NuCheck executable file will be found in the Output directory
