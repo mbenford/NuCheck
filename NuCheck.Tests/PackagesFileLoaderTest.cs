@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace NuCheck.Tests
 {
@@ -9,7 +8,7 @@ namespace NuCheck.Tests
     {
         public class Loads_A_Package_File_From_Disk
         {
-            [Test]
+            [Fact]
             public void Returns_A_List_Containing_All_Packages_In_A_File()
             {
                 // Arrange
@@ -31,7 +30,7 @@ namespace NuCheck.Tests
                 result.ShouldBeEquivalentTo(expected);
             }
 
-            [Test]
+            [Fact]
             public void Returns_An_Empty_List_When_No_Package_File_Is_Found()
             {
                 // Arrange
