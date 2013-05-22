@@ -8,8 +8,22 @@ To help catch that scenario earlier in the development process I created NuCheck
 
 Building NuCheck from the source code is just a three-step process:
 
-	git clone https://github.com/mbenford/nucheck.git
-	cd NuCheck
-	build.cmd
+	1. git clone https://github.com/mbenford/nucheck.git
+	2. cd NuCheck
+	3. build.cmd
 
-When the build script finishes running, NuCheck executable file will be found in the Output directory
+When the build script finishes running, NuCheck executable file will be found in the newly created Output directory.
+
+## Using NuCheck
+
+NuCheck accepts a solution file as its one single command line argument:
+
+	nucheck solution.sln
+
+If different versions of a package are being used by different projects, a summary will be displayed:
+
+	> nucheck solution.sln
+	2 issues found
+
+	Ninject 3.0.1.10 is being used by Project1, Project3
+	Ninject 3.0.0.15 is being used by Project2
