@@ -8,9 +8,9 @@ To help catch that scenario earlier in the development process I created NuCheck
 
 Building NuCheck from the source code is just a three-step process:
 
-	1. git clone https://github.com/mbenford/nucheck.git
-	2. cd NuCheck
-	3. build.cmd
+	> git clone https://github.com/mbenford/nucheck.git
+	> cd NuCheck
+	> build.cmd
 
 When the build script finishes running, NuCheck executable file will be found in the newly created Output directory.
 
@@ -18,7 +18,7 @@ When the build script finishes running, NuCheck executable file will be found in
 
 NuCheck accepts a solution file as its one single command line argument:
 
-	nucheck solution.sln
+	> nucheck solution.sln
 
 If different versions of a package are being used by different projects, a summary will be displayed:
 
