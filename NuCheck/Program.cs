@@ -1,40 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace NuCheck
 {
     class Program
     {
-        static int Main(string[] args)
+        static void Main(string[] args)
         {
-            int exitCode = 0;
+            DisplayHelpIfNeeded(args);
 
-            if (args.Any())
+            CheckIfSolutionFileExists(args[0]);            
+
+            AnalyzeSolution(args[0]);
+        }
+
+        private static void DisplayHelpIfNeeded(string[] args)
+        {
+            if (!args.Any())
             {
-                string solutionFile = args[0];
-                SolutionAnalyzer analyzer = CreateSolutionAnalyzer();
-                var issues = analyzer.GetIssues(solutionFile);
+                Assembly assembly = Assembly.GetEntryAssembly();
+                FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-                if (issues.Any())
-                {
-                    foreach (Issue issue in issues)
-                    {
-                        Console.WriteLine("Package {0} {1} is being referenced by the following projects:", issue.Package.Id, issue.Package.Version);
-                        foreach (Project project in issue.Projects)
-                        {
-                            Console.WriteLine(project.Name);
-                        }
-                    }
+                Console.WriteLine("NuCheck Version: {0}", versionInfo.FileVersion);
+                Console.WriteLine("usage: NuCheck <solution-file>");
+                Environment.Exit(1);
+            }
+        }
 
-                    exitCode = 1;
-                }
-                else
+        private static void CheckIfSolutionFileExists(string solutionFile)
+        {
+            if (!File.Exists(solutionFile))
+            {
+                Console.Error.WriteLine("Solution file {0} not found");
+                Environment.Exit(1);
+            }
+        }
+
+        private static void AnalyzeSolution(string solutionFile)
+        {
+            SolutionAnalyzer analyzer = CreateSolutionAnalyzer();
+            IEnumerable<Issue> issues = analyzer.GetIssues(solutionFile);
+
+            if (issues.Any())
+            {
+                Console.WriteLine("{0} issues found\n", issues.Count());
+
+                foreach (Issue issue in issues)
                 {
-                    Console.WriteLine("No issues found");
+                    Console.WriteLine("{0} {1} is being used by {2}", issue.Package.Id, issue.Package.Version,
+                        String.Join(", ", issue.Projects.Select(p => p.Name)));                    
                 }
+
+                Environment.Exit(1);
             }
 
-            return exitCode;
+            Console.WriteLine("No issues found");
+            Environment.Exit(0);
         }
 
         private static SolutionAnalyzer CreateSolutionAnalyzer()
