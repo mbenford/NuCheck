@@ -35,7 +35,7 @@ namespace NuCheck
         {
             if (!File.Exists(solutionFile))
             {
-                Console.Error.WriteLine("Solution file {0} not found");
+                Console.Error.WriteLine("File {0} not found", solutionFile);
                 Environment.Exit(1);
             }
         }
