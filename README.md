@@ -27,3 +27,5 @@ If different versions of a package are being used by different projects, a summa
 
 	Ninject 3.0.1.10 is being used by Project1, Project3
 	Ninject 3.0.0.15 is being used by Project2
+
+As you would expect, NuCheck returns a non-zero exit code when an issue is found so that you can use it as part of a build script and/or a CI system to keep an eye on the packages being added by your team.
