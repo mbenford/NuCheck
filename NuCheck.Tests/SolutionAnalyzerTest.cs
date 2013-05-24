@@ -65,12 +65,21 @@ namespace NuCheck.Tests
                 IEnumerable<Issue> result = sut.GetIssues("solution.sln");
 
                 // Assert
+                var versionsForP1 = new Dictionary<string, IEnumerable<Project>>
+                    {
+                        { "1.0.0", new[] { project1 } },
+                        { "1.1.0", new[] { project2 } },
+                    };
+                var versionsForP2 = new Dictionary<string, IEnumerable<Project>>
+                    {
+                        { "1.0.0", new[] { project1 } },
+                        { "2.0.0", new[] { project2 } },
+                    };                
+
                 IEnumerable<Issue> expected = new[]
                     {
-                        new Issue(package1, new[] { project1 }), 
-                        new Issue(package2, new[] { project2 }), 
-                        new Issue(package3, new[] { project1 }), 
-                        new Issue(package4, new[] { project2 }), 
+                        new Issue("P1", versionsForP1), 
+                        new Issue("P2", versionsForP2),                         
                     };
 
                 result.ShouldBeEquivalentTo(expected);

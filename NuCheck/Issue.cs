@@ -4,13 +4,13 @@ namespace NuCheck
 {
     public class Issue
     {
-        public Issue(Package package, IEnumerable<Project> projects)
+        public Issue(string packageId, IDictionary<string, IEnumerable<Project>> versions)
         {
-            Package = package;
-            Projects = projects;
+            PackageId = packageId;
+            Versions = versions;
         }
 
-        public Package Package { get; private set; }
-        public IEnumerable<Project> Projects { get; private set; }
+        public string PackageId { get; private set; }
+        public IDictionary<string, IEnumerable<Project>> Versions { get; private set; }
     }
 }

@@ -16,15 +16,11 @@ namespace NuCheck
         {
             IDictionary<Package, IEnumerable<Project>> packagesAggregation = packagesAggregator.Aggregate(solutionFile);
 
-            var packagesWithIssues = from package in packagesAggregation.Keys
-                                     group package by package.Id
-                                     into g
-                                     where g.Count() > 1
-                                     select new { Id = g.Key, Versions = g.ToList() };
-
-            return packagesWithIssues.SelectMany(package => package.Versions)
-                                     .Select(package => new Issue(package, packagesAggregation[package]))
-                                     .ToList();
+            return from package in packagesAggregation.Keys
+                   group package by package.Id
+                   into g
+                   where g.Count() > 1
+                   select new Issue(g.Key, g.ToDictionary(p => p.Version, p => packagesAggregation[p]));
         }
     }
 }
