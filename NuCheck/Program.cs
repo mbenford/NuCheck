@@ -47,12 +47,22 @@ namespace NuCheck
 
             if (issues.Any())
             {
-                Console.WriteLine("{0} issues found\n", issues.Count());
+                Console.WriteLine("{0} issues found", issues.Count());
 
-                foreach (Issue issue in issues)
+                foreach (var issue in issues.OrderBy(issue => issue.PackageId))
                 {
-                    Console.WriteLine("{0} {1} is being used by {2}", issue.Package.Id, issue.Package.Version,
-                        String.Join(", ", issue.Projects.Select(p => p.Name)));                    
+                    Console.WriteLine("\n{0} ({1} versions)", issue.PackageId, issue.Versions.Keys.Count);
+                    
+                    foreach (var version in issue.Versions.OrderBy(version => version.Key))
+                    {
+                        Console.WriteLine("=> {0} ({1} {2})", version.Key, version.Value.Count(), 
+                            version.Value.Count() > 1 ? "projects" : "project");
+
+                        foreach (var project in version.Value.OrderBy(project => project.Name))
+                        {
+                            Console.WriteLine("   - {0}", project.Name);
+                        }
+                    }                    
                 }
 
                 Environment.Exit(1);
