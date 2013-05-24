@@ -22,10 +22,22 @@ NuCheck accepts a solution file as its one single command line argument:
 
 If different versions of a package are being used by different projects, a summary will be displayed:
 
-	> nucheck solution.sln
+	> nucheck solution.sln	
 	2 issues found
-
-	Ninject 3.0.1.10 is being used by Project1, Project3
-	Ninject 3.0.0.15 is being used by Project2
+	
+	Ninject (2 versions)
+	=> 3.0.0.15 (1 project)
+	   - Project2
+	=> 3.0.1.10 (2 projects)
+	   - Project1
+	   - Project3
+	
+	RabbitMQ.Client (3 versions)
+	=> 3.0.0 (1 project)
+	   - Project2
+	=> 3.0.2 (1 project)
+	   - Project3
+	=> 3.0.4 (1 project)
+	   - Project1
 
 As you would expect, NuCheck returns a non-zero exit code when an issue is found so that you can use it as part of a build script and/or a CI system to keep an eye on the packages being added by your team.
