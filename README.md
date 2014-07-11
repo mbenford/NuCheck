@@ -1,4 +1,4 @@
-# NuCheck
+# NuCheck [![Build status](https://ci.appveyor.com/api/projects/status/h8dq23fjvtevlc18)](https://ci.appveyor.com/project/mbenford/nucheck)
 
 NuGet is a great tool and a great package manager for .NET applications. Unfortunately it currently doesn't alert us when we are trying to add a different version of a package already in use by some other project in a solution. And since the Manage NuGet Packages dialog box always installs the latest version of a package, as we add new projects we can easily end up having several different versions of a package in use across the solution. Despite being a perfectly valid scenario, having multiples versions of an assembly in use can lead to nasty runtime errors.
 
