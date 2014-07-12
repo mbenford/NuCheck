@@ -15,17 +15,17 @@ namespace NuCheck.Tests
                 string projectFile = "TestData\\Project.csproj";
 
                 var sut = new PackagesFileLoader();
-                
+
                 // Act
                 IEnumerable<Package> result = sut.Load(projectFile);
 
                 // Assert
                 var expected = new[]
-                    {
-                        new Package("Package1", "1.0.0"),
-                        new Package("Package2", "1.1.0"),
-                        new Package("Package3", "2.0.0"),
-                    };
+                {
+                    new Package("Package1", "1.0.0"),
+                    new Package("Package2", "1.1.0"),
+                    new Package("Package3", "2.0.0")
+                };
 
                 result.ShouldBeEquivalentTo(expected);
             }

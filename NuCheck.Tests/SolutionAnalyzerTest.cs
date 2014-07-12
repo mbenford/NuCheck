@@ -28,9 +28,9 @@ namespace NuCheck.Tests
                     { new Package("P2", "1.0.0"), new Project[] { } },
                     { new Package("P3", "1.0.0"), new Project[] { } }
                 };
-                
+
                 packageAggregatorMock.Setup(m => m.Aggregate("solution.sln", null))
-                                     .Returns(packageAggregation);                
+                                     .Returns(packageAggregation);
 
                 // Act
                 IEnumerable<Issue> result = sut.GetIssues("solution.sln");
@@ -82,7 +82,7 @@ namespace NuCheck.Tests
                 IEnumerable<Issue> expected = new[]
                 {
                     new Issue("P1", versionsForP1),
-                    new Issue("P2", versionsForP2),
+                    new Issue("P2", versionsForP2)
                 };
 
                 result.ShouldBeEquivalentTo(expected);

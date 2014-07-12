@@ -7,7 +7,7 @@
             Id = id;
             Version = version;
         }
-
+        
         public override bool Equals(object obj)
         {
             var other = obj as Package;

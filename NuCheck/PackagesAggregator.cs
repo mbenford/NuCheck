@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -8,7 +7,7 @@ namespace NuCheck
     public class PackagesAggregator : IPackagesAggregator
     {
         private readonly IProjectExtractor projectExtractor;
-        private readonly IPackagesFileLoader packagesFileLoader;
+        private readonly IPackagesFileLoader packagesFileLoader;        
 
         public PackagesAggregator(IProjectExtractor projectExtractor, IPackagesFileLoader packagesFileLoader)
         {
@@ -26,8 +25,8 @@ namespace NuCheck
             {
                 foreach (Package package in packagesFileLoader.Load(Path.Combine(basePath, project.FileName)))
                 {
-                    if (ShouldIgnorePackage(package, pattern)) continue;                    
-                    
+                    if (ShouldIgnorePackage(package, pattern)) continue;
+
                     if (aggregation.ContainsKey(package))
                     {
                         (aggregation[package] as IList<Project>).Add(project);
@@ -38,13 +37,13 @@ namespace NuCheck
                     }
                 }
             }
-                     
+
             return aggregation;
         }
 
         private bool ShouldIgnorePackage(Package package, string pattern)
         {
-            return pattern != null && !Regex.IsMatch(package.Id, WildcardToRegex(pattern), RegexOptions.IgnoreCase);                   
+            return pattern != null && !Regex.IsMatch(package.Id, WildcardToRegex(pattern), RegexOptions.IgnoreCase);
         }
 
         private string WildcardToRegex(string pattern)

@@ -17,7 +17,6 @@ namespace NuCheck
             {
                 packages = from p in XElement.Load(packageFile).Elements()
                            select new Package((string)p.Attribute("id"), (string)p.Attribute("version"));
-
             }
             else
             {

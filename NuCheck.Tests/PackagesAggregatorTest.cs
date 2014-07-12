@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -15,23 +14,22 @@ namespace NuCheck.Tests
         {
             private const string solutionFile = @"C:\solution.sln";
 
-            private Mock<IProjectExtractor> projectExtractorMock;
-            private Mock<IPackagesFileLoader> packagesFileLoaderMock;
-            
             private readonly PackagesAggregator sut;
+            private Mock<IPackagesFileLoader> packagesFileLoaderMock;
+            private Mock<IProjectExtractor> projectExtractorMock;
 
             public Groups_All_Projects_By_Package_Id_And_Version()
             {
                 var projects = new[]
                 {
-                    new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj"), 
+                    new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj")
                 };
 
                 string project1FileName = Path.Combine(Path.GetDirectoryName(solutionFile), projects[0].FileName);
                 string project2FileName = Path.Combine(Path.GetDirectoryName(solutionFile), projects[1].FileName);
 
                 var packagesOfProject1 = new[] { new Package("Package.P1", "1.0.0"), new Package("Package.P2", "1.0.0") };
-                var packagesOfProject2 = new[] { new Package("Package.P1", "1.0.0"), new Package("Package.P2", "1.1.0") };                
+                var packagesOfProject2 = new[] { new Package("Package.P1", "1.0.0"), new Package("Package.P2", "1.1.0") };
 
                 projectExtractorMock = new Mock<IProjectExtractor>();
                 projectExtractorMock.Setup(m => m.ExtractAll(solutionFile))

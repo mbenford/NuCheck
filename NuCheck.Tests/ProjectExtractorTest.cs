@@ -21,11 +21,11 @@ namespace NuCheck.Tests
 
                 // Assert
                 var expected = new[]
-                    {
-                        new Project("Project1", "Project1.csproj"),
-                        new Project("Project2", "Project2.csproj"),
-                        new Project("Project3", "Project3.csproj"),
-                    };
+                {
+                    new Project("Project1", "Project1.csproj"),
+                    new Project("Project2", "Project2.csproj"),
+                    new Project("Project3", "Project3.csproj")
+                };
 
                 result.ShouldBeEquivalentTo(expected);
             }

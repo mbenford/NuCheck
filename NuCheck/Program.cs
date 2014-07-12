@@ -7,16 +7,16 @@ using System.Reflection;
 
 namespace NuCheck
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             DisplayHelpIfNeeded(args);
 
             string solutionFile = args[0];
             string pattern = args.ElementAtOrDefault(1);
 
-            CheckIfSolutionFileExists(solutionFile);            
+            CheckIfSolutionFileExists(solutionFile);
             AnalyzeSolution(solutionFile, pattern);
         }
 
@@ -28,10 +28,10 @@ namespace NuCheck
                 FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
                 WriteLine("NuCheck Version: {0}", versionInfo.FileVersion);
-                WriteLine("usage: NuCheck <solution-file> [pattern]\r\n\r\n" + 
+                WriteLine("usage: NuCheck <solution-file> [pattern]\r\n\r\n" +
                           "solution-file     Solution file to be analyzed.\r\n" +
                           "pattern           Pattern to be used to select a subset of the packages in use. Wildcards are supported.");
-                
+
                 Exit(1);
             }
         }
@@ -57,17 +57,17 @@ namespace NuCheck
                 foreach (var issue in issues.OrderBy(issue => issue.PackageId))
                 {
                     WriteLine("\n{0} ({1} versions)", issue.PackageId, issue.Versions.Keys.Count);
-                    
+
                     foreach (var version in issue.Versions.OrderBy(version => version.Key))
                     {
-                        WriteLine("=> {0} ({1} {2})", version.Key, version.Value.Count(), 
+                        WriteLine("=> {0} ({1} {2})", version.Key, version.Value.Count(),
                             version.Value.Count() > 1 ? "projects" : "project");
 
                         foreach (var project in version.Value.OrderBy(project => project.Name))
                         {
                             WriteLine("   - {0}", project.Name);
                         }
-                    }                    
+                    }
                 }
 
                 Exit(1);
