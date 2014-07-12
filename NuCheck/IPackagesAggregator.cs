@@ -4,6 +4,6 @@ namespace NuCheck
 {
     public interface IPackagesAggregator
     {
-        IDictionary<Package, IEnumerable<Project>> Aggregate(string solutionFile);
+        IDictionary<Package, IEnumerable<Project>> Aggregate(string solutionFile, string pattern = null);
     }
 }

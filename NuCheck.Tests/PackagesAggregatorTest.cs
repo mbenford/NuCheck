@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using Xunit;
+using Xunit.Extensions;
 
 namespace NuCheck.Tests
 {
@@ -10,26 +13,25 @@ namespace NuCheck.Tests
     {
         public class Groups_All_Projects_By_Package_Id_And_Version
         {
+            private const string solutionFile = @"C:\solution.sln";
+
             private Mock<IProjectExtractor> projectExtractorMock;
             private Mock<IPackagesFileLoader> packagesFileLoaderMock;
             
-            private IDictionary<Package, IEnumerable<Project>> result;
+            private readonly PackagesAggregator sut;
 
             public Groups_All_Projects_By_Package_Id_And_Version()
             {
-                // Arrange
-                string solutionFile = "C:\\solution.sln";
-
                 var projects = new[]
-                    {
-                        new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj"), 
-                    };
+                {
+                    new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj"), 
+                };
 
                 string project1FileName = Path.Combine(Path.GetDirectoryName(solutionFile), projects[0].FileName);
                 string project2FileName = Path.Combine(Path.GetDirectoryName(solutionFile), projects[1].FileName);
 
-                var packagesOfProject1 = new[] { new Package("P1", "1.0.0"), new Package("P2", "1.0.0") };
-                var packagesOfProject2 = new[] { new Package("P1", "1.0.0"), new Package("P2", "1.1.0") };                
+                var packagesOfProject1 = new[] { new Package("Package.P1", "1.0.0"), new Package("Package.P2", "1.0.0") };
+                var packagesOfProject2 = new[] { new Package("Package.P1", "1.0.0"), new Package("Package.P2", "1.1.0") };                
 
                 projectExtractorMock = new Mock<IProjectExtractor>();
                 projectExtractorMock.Setup(m => m.ExtractAll(solutionFile))
@@ -41,48 +43,47 @@ namespace NuCheck.Tests
                 packagesFileLoaderMock.Setup(m => m.Load(project2FileName))
                                       .Returns(packagesOfProject2);
 
-                var sut = new PackagesAggregator(projectExtractorMock.Object, packagesFileLoaderMock.Object);
-
-                // Act
-                result = sut.Aggregate(solutionFile);
+                sut = new PackagesAggregator(projectExtractorMock.Object, packagesFileLoaderMock.Object);
             }
 
             [Fact]
-            public void Result_Keys_Should_Match_Expected_Keys()
+            public void Groups_All_Packages()
             {
-                var expectedKeys = new[]
-                    {
-                        new Package("P1", "1.0.0"),
-                        new Package("P2", "1.0.0"),
-                        new Package("P2", "1.1.0"),
-                    };
+                // Arrange
+                var expected = new Dictionary<Package, IEnumerable<Project>>
+                {
+                    { new Package("Package.P1", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj") } },
+                    { new Package("Package.P2", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj") } },
+                    { new Package("Package.P2", "1.1.0"), new[] { new Project("PROJ2", "project2.csproj") } }
+                };
 
-                result.Keys.ShouldBeEquivalentTo(expectedKeys);
+                // Act/Assert
+                sut.Aggregate(solutionFile).ShouldBeEquivalentTo(expected);
             }
 
-            [Fact]
-            public void Result_Values_Should_Match_Expected_Values()
+            [Theory]
+            [InlineData("Package", null)]
+            [InlineData("Package.P3", null)]
+            [InlineData("Package.P1", new[] { "Package.P1" })]
+            [InlineData("package.p1", new[] { "Package.P1" })]
+            [InlineData("Package.P1*", new[] { "Package.P1" })]
+            [InlineData("Package*", new[] { "Package.P1", "Package.P2" })]
+            [InlineData("Package.P?", new[] { "Package.P1", "Package.P2" })]
+            [InlineData("P*.P2", new[] { "Package.P2" })]
+            public void Groups_Only_Packages_Whose_Ids_Match_The_Provided_Expression(string expression, string[] packageIds)
             {
-                var expectedValues = new[]
-                    {
-                        new[] { new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj") },
-                        new[] { new Project("PROJ1", "project1.csproj") },
-                        new[] { new Project("PROJ2", "project2.csproj") },
-                    };
+                // Arrange
+                var data = new Dictionary<Package, IEnumerable<Project>>
+                {
+                    { new Package("Package.P1", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj"), new Project("PROJ2", "project2.csproj") } },
+                    { new Package("Package.P2", "1.0.0"), new[] { new Project("PROJ1", "project1.csproj") } },
+                    { new Package("Package.P2", "1.1.0"), new[] { new Project("PROJ2", "project2.csproj") } }
+                };
 
-                result.Values.ShouldBeEquivalentTo(expectedValues);
-            }
+                var expected = data.Where(a => packageIds != null && packageIds.Contains(a.Key.Id));
 
-            [Fact]
-            public void IProjectExtractor_ExtractAll_Should_Be_Called_Once()
-            {
-                projectExtractorMock.Verify(m => m.ExtractAll(It.IsAny<string>()), Times.Once());
-            }
-
-            [Fact]
-            public void IPackagesFileLoader_Load_Should_Be_Called_Twice()
-            {
-                packagesFileLoaderMock.Verify(m => m.Load(It.IsAny<string>()), Times.Exactly(2));
+                // Act/Assert
+                sut.Aggregate(solutionFile, expression).ShouldBeEquivalentTo(expected);
             }
         }
     }

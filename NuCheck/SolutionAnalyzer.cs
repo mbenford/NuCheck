@@ -12,9 +12,9 @@ namespace NuCheck
             this.packagesAggregator = packagesAggregator;
         }
 
-        public IEnumerable<Issue> GetIssues(string solutionFile)
+        public IEnumerable<Issue> GetIssues(string solutionFile, string pattern = null)
         {
-            IDictionary<Package, IEnumerable<Project>> packagesAggregation = packagesAggregator.Aggregate(solutionFile);
+            IDictionary<Package, IEnumerable<Project>> packagesAggregation = packagesAggregator.Aggregate(solutionFile, pattern);
 
             return from package in packagesAggregation.Keys
                    group package by package.Id

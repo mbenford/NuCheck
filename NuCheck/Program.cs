@@ -13,21 +13,26 @@ namespace NuCheck
         {
             DisplayHelpIfNeeded(args);
 
-            CheckIfSolutionFileExists(args[0]);            
+            string solutionFile = args[0];
+            string pattern = args.ElementAtOrDefault(1);
 
-            AnalyzeSolution(args[0]);
+            CheckIfSolutionFileExists(solutionFile);            
+            AnalyzeSolution(solutionFile, pattern);
         }
 
-        private static void DisplayHelpIfNeeded(string[] args)
+        private static void DisplayHelpIfNeeded(IEnumerable<string> args)
         {
-            if (!args.Any())
+            if (!args.Any() || args.Count() > 2)
             {
                 Assembly assembly = Assembly.GetEntryAssembly();
                 FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-                Console.WriteLine("NuCheck Version: {0}", versionInfo.FileVersion);
-                Console.WriteLine("usage: NuCheck <solution-file>");
-                Environment.Exit(1);
+                WriteLine("NuCheck Version: {0}", versionInfo.FileVersion);
+                WriteLine("usage: NuCheck <solution-file> [pattern]\r\n\r\n" + 
+                          "solution-file     Solution file to be analyzed.\r\n" +
+                          "pattern           Pattern to be used to select a subset of the packages in use. Wildcards are supported.");
+                
+                Exit(1);
             }
         }
 
@@ -35,41 +40,41 @@ namespace NuCheck
         {
             if (!File.Exists(solutionFile))
             {
-                Console.Error.WriteLine("File {0} not found", solutionFile);
-                Environment.Exit(1);
+                WriteLine("File {0} not found", solutionFile);
+                Exit(1);
             }
         }
 
-        private static void AnalyzeSolution(string solutionFile)
+        private static void AnalyzeSolution(string solutionFile, string pattern)
         {
             SolutionAnalyzer analyzer = CreateSolutionAnalyzer();
-            IEnumerable<Issue> issues = analyzer.GetIssues(solutionFile);
+            IEnumerable<Issue> issues = analyzer.GetIssues(solutionFile, pattern);
 
             if (issues.Any())
             {
-                Console.WriteLine("{0} issues found", issues.Count());
+                WriteLine("{0} issues found", issues.Count());
 
                 foreach (var issue in issues.OrderBy(issue => issue.PackageId))
                 {
-                    Console.WriteLine("\n{0} ({1} versions)", issue.PackageId, issue.Versions.Keys.Count);
+                    WriteLine("\n{0} ({1} versions)", issue.PackageId, issue.Versions.Keys.Count);
                     
                     foreach (var version in issue.Versions.OrderBy(version => version.Key))
                     {
-                        Console.WriteLine("=> {0} ({1} {2})", version.Key, version.Value.Count(), 
+                        WriteLine("=> {0} ({1} {2})", version.Key, version.Value.Count(), 
                             version.Value.Count() > 1 ? "projects" : "project");
 
                         foreach (var project in version.Value.OrderBy(project => project.Name))
                         {
-                            Console.WriteLine("   - {0}", project.Name);
+                            WriteLine("   - {0}", project.Name);
                         }
                     }                    
                 }
 
-                Environment.Exit(1);
+                Exit(1);
             }
 
-            Console.WriteLine("No issues found");
-            Environment.Exit(0);
+            WriteLine("No issues found");
+            Exit(0);
         }
 
         private static SolutionAnalyzer CreateSolutionAnalyzer()
@@ -78,6 +83,16 @@ namespace NuCheck
             var packagesFileLoader = new PackagesFileLoader();
             var packagesAggregator = new PackagesAggregator(projectExtractor, packagesFileLoader);
             return new SolutionAnalyzer(packagesAggregator);
+        }
+
+        private static void WriteLine(string message, params object[] args)
+        {
+            Console.WriteLine(message, args);
+        }
+
+        private static void Exit(int exitCode)
+        {
+            Environment.Exit(exitCode);
         }
     }
 }

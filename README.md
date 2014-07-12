@@ -16,7 +16,7 @@ When the build script finishes running, NuCheck executable file will be found in
 
 ## Using NuCheck
 
-NuCheck accepts a solution file as its one single command line argument:
+NuCheck accepts a solution file as its first command line argument:
 
 	> nucheck solution.sln
 
@@ -39,5 +39,25 @@ If different versions of a package are being used by different projects, a summa
 	   - Project3
 	=> 3.0.4 (1 project)
 	   - Project1
+
+Optionally you can pass a pattern as a second argument to NuCheck so it selects only a subset of all packages in use (wildcards are supported):
+
+    > nucheck solution.sln ServiceStack*
+    3 issues found
+
+    ServiceStack.Common (2 versions)
+	=> 3.9.71 (1 project)
+	   - Project1
+	=> 4.0.17 (2 projects)
+	   - Project2
+	   - Project3
+	
+	ServiceStack.Redis (3 versions)
+	=> 3.9.37 (1 project)
+	   - Project1
+	=> 3.9.71 (1 project)
+	   - Project2
+	=> 4.0.17 (1 project)
+	   - Project3
 
 As you would expect, NuCheck returns a non-zero exit code when an issue is found so that you can use it as part of a build script and/or a CI system to keep an eye on the packages being added by your team.
