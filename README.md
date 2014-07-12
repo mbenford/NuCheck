@@ -4,6 +4,10 @@ NuGet is a great tool and a great package manager for .NET applications. Unfortu
 
 To help catch this problem earlier in the development process I created NuCheck, a little tool to check if there are different versions of a NuGet package in use in a solution. Just provide it with a solution file and you're done: it'll tell you if everything is fine or if there is something to worry about.
 
+## Downloading
+
+You can grab the latest version of NuCheck by accessing the [Artifacts page](https://ci.appveyor.com/project/mbenford/nucheck/build/artifacts) on AppVeyor.
+
 ## Building from the source code
 
 Building NuCheck from the source code is just a three-step process:
